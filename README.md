@@ -1,10 +1,11 @@
 # swigbind11 - Interfacing SWIG and pybind11 <!-- omit in toc -->
 
 - [Overview](#overview)
-- [Motivation and Example](#motivation-and-example)
+- [Motivation](#motivation)
   - [Basics of *pybind11*](#basics-of-pybind11)
   - [Combining libraries using *SWIG* and *pybind11*](#combining-libraries-using-swig-and-pybind11)
 - [Using *swigbind11*](#using-swigbind11)
+- [Example: FS Plugin](#example-fs-plugin)
 
 ## Overview
 
@@ -31,7 +32,7 @@ interact with a library B wrapped to Python via *SWIG* by exchanging C++ objects
 via the Python layer, incompatibilities arise due to the different methods of
 wrapping the underlying C++ types.
 
-## Motivation and Example
+## Motivation
 
 ### Basics of *pybind11*
 
@@ -198,6 +199,11 @@ mapping between the underlying C++ type (here `a::Bar`) and the corresponding
 Python type (`a_swig.Bar`). If these two types do not match up, there is no way
 for `swigbind11::swig_py_cast<>` to detect this, and one will (as a best case
 scenario) encounter segmentation faults and similar errors.
+
+## Example: FS Plugin
+
+TODO: Describe details of FSPlugin, the skeleton of a FS plugin passing a
+`FSMesh` via the Python layer.
 
 
 [^1]: https://github.com/tensorflow/community/blob/master/rfcs/20190208-pybind11.md
