@@ -202,8 +202,7 @@ scenario) encounter segmentation faults and similar errors.
 
 ## Example: FS Plugin
 
-TODO: Describe details of FSPlugin, the skeleton of a FS plugin passing a
-`FSMesh` via the Python layer.
-
+A demonstration of the usage of *swigbind11* for a real-world example (plugin
+for the *Flow Simulator*) is contained in the [example directory](example/).
 
 [^1]: https://github.com/tensorflow/community/blob/master/rfcs/20190208-pybind11.md
