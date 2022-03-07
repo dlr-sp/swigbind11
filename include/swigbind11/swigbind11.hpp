@@ -1,5 +1,6 @@
 // See the file "LICENSE" for the full license governing this code.
 
+#include <memory>
 #include <stdexcept>
 #include <string_view>
 
@@ -21,7 +22,7 @@ struct SwigPyObject {
 namespace py = pybind11;
 
 template <typename T>
-auto swig_py_cast(const py::object& obj, std::string_view python_type_name) {
+auto swig_py_cast(py::object& obj, std::string_view python_type_name) -> std::shared_ptr<T> {
   if (python_type_name.find_last_of('.') == std::string_view::npos) {
     throw std::runtime_error{"python type must be fully qualified, i.e., <module>.<class>"};
   }
@@ -41,10 +42,17 @@ auto swig_py_cast(const py::object& obj, std::string_view python_type_name) {
     throw py::cast_error{"expected SWIG-wrapped object, got: " + type};
   }
 
+  // manually increase reference count of the wrapping Python object
+  obj.inc_ref();
+
   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
   auto* swig_pyobject = reinterpret_cast<SwigPyObject*>(swig_obj.ptr());
   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-  return reinterpret_cast<T*>(swig_pyobject->ptr);
+  return std::shared_ptr<T>{reinterpret_cast<T*>(swig_pyobject->ptr), [pyobj=obj.ptr()](auto p) {
+    // manually decrease reference count of the wrapping Python object
+    py::handle obj{pyobj};
+    obj.dec_ref();
+  }};
 }
 
 }  // namespace swigbind11
