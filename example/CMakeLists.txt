@@ -13,11 +13,15 @@ set(CMAKE_CXX_EXTENSIONS off)
 # the appropriate location, e.g., '${PROJECT_SOURCE_DIR}/third_party/swigbind11'
 set(SWIGBIND11_ROOT "../")
 
-# same goes for pybind11
+# for pybind11, either the version included in swigbind11 can be used or a
+# project-specific one, e.g., '${PROJECT_SOURCE_DIR}/third_party/pybind11'
 set(PYBIND11_ROOT "../third_party/pybind11")
 
 # prefer first detected Python version to avoid issues with virtual environments
 set(Python_FIND_STRATEGY LOCATION)
+
+# enable generation of Clang compilation database for IDE integration
+set(CMAKE_EXPORT_COMPILE_COMMANDS on)
 
 set(python_components Interpreter Development.Module)
 
@@ -37,9 +41,5 @@ add_subdirectory(${PYBIND11_ROOT} "third_party/pybind11" EXCLUDE_FROM_ALL)
 # swigbind11 shipped as a third-party dependency
 add_subdirectory(${SWIGBIND11_ROOT} "third_party/swigbind11" EXCLUDE_FROM_ALL)
 
-pybind11_add_module(fsplugin MODULE fsplugin.cpp)
-
-target_link_libraries(fsplugin PRIVATE PkgConfig::FSDM swigbind11::headers)
-
-# enable generation of Clang compilation database for IDE integration
-set(CMAKE_EXPORT_COMPILE_COMMANDS on)
+# actual module source
+add_subdirectory(src/fsplugin)
