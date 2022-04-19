@@ -15,20 +15,21 @@ generate bindings for Python, but over the last years
 Most newer projects rely on *pybind11* and even large exiting code bases, such
 as, *tensorflow*[^1], made the transition to *pybind11*. While SWIG is extremely
 powerful with its support for a large number of languages, it has its
-shortcomings w.r.t. supporting modern C++ standard. Development somewhat stalled
-and with the increasing complexity of C++ it is unlikely SWIG will ever catch
-up. The scope of *pybind11* is much more focused: the goal is to enable the
-generation of Python bindings employing modern C++ itself. As such, *pybind11*
-does not have to process and transform C++ code to generate the glue code for the
-Python bindings, but rather *pybind11* provides a C++ library to enable the
-developer to generate this glue code easily, as part of regular C++ library.
+shortcomings w.r.t. supporting modern C++ standards. There seems to be little
+development in this direction and with the increasing complexity of C++ it is
+unlikely SWIG will ever catch up. The scope of *pybind11* is much more focused:
+the goal is to enable the generation of Python bindings employing modern C++
+itself. As such, *pybind11* does not have to process and transform C++ code to
+generate the glue code for the Python bindings, but rather *pybind11* provides a
+C++ library to enable the developer to generate this glue code easily, as part
+of regular C++ library.
 
 While creating Python modules using *pybind11* is surprisingly easy, things get
 tricky when interacting with libraries using *SWIG* to generate their Python
 bindings. As long as the modules generated via *SWIG* and *pybind11* interact
-only on the Python level, the method the bindings were generated does not
-matter. But as soon as a C++ library A wrapped to Python via *pybind11* tries to
-interact with a library B wrapped to Python via *SWIG* by exchanging C++ objects
+only on the Python level, the method the bindings were generated with does not
+matter. But as soon as a C++ library wrapped to Python via *pybind11* tries to
+interact with a library wrapped to Python via *SWIG* by exchanging C++ objects
 via the Python layer, incompatibilities arise due to the different methods of
 wrapping the underlying C++ types.
 
@@ -52,7 +53,7 @@ public:
   auto get_answer() -> int { return 42; }
 };
 
-int foo(A *a) {
+auto foo(A *a) -> int {
   return a->get_answer();
 };
 
@@ -167,7 +168,13 @@ bindings. But, as we shall see in the next section, there is a solution!
 
 ## Using *swigbind11*
 
-Interfacing of libraries wrapped via *SWIG* and *pybind11* is quite easy using *swigbind11*:
+Interfacing of libraries wrapped via *SWIG* and *pybind11* is quite easy using
+*swigbind11*. It allows the automatic conversion between *SWIG*-wrapped objects
+and the corresponding C++ types by means of using a custom *pybind11* *type
+caster*. This *type caster* transforms a Python object holding, e.g., a `a::Bar`
+into a `std::shared_ptr<a::Bar>` and vice versa. A `std::shared_ptr<>` is required
+to properly track the lifetime of the underlying object on the Python and C++ side
+simultaneously.
 
 <!-- #### b_swigpybind11.cpp (Python wrappers for library *B* using *swigbind11*) -->
 ```cpp
@@ -178,27 +185,47 @@ Interfacing of libraries wrapped via *SWIG* and *pybind11* is quite easy using *
 
 namespace py = pybind11;
 
+SWIGBIND11_TYPE_CASTER(a::Bar, "a_swig.Bar");
+
 namespace b {
 
 PYBIND11_MODULE(b_pybind, m) {
-  py::class_<Foo>(m, "Foo").def(py::init<>([](py::object swig_bar_proxy) {
-    a::Bar* bar = swigbind11::swig_py_cast<a::Bar>(swig_bar_proxy, "a_swig.Bar");
-
-    return Foo{bar};
-  }));
+  py::class_<Foo>(m, "Foo").def(py::init<std::shared_ptr<a::Bar>>(), py::arg("bar"));
 }
 
 }
 ```
-The templated function `swigbind11::swig_py_cast<>` allows us to perform a
-(somewhat) type-safe cast of an instance of `a::Bar` wrapped into a
-*SWIG*-created Python object back into the underlying C++ type, so we can pass
-it to the constructor of `b::Foo`. The reason for the conversion being only
-'somewhat' type-safe lies in the requirement for the developer to provide the
-mapping between the underlying C++ type (here `a::Bar`) and the corresponding
-Python type (`a_swig.Bar`). If these two types do not match up, there is no way
-for `swigbind11::swig_py_cast<>` to detect this, and one will (as a best case
-scenario) encounter segmentation faults and similar errors.
+
+The only other required change is to switch the interface of `b::Foo` to accept
+a `std::shared_ptr<a::Bar>` instead of a raw pointer. Using a smart pointer here
+at the interface of C*+ and Python instead of a raw pointer is often a good idea
+anyway, as this avoids hard to debug issues with interference between the
+automatic Python garbage collection and the use of the underlying object on both
+sides of the interface.
+
+In addition to the helper macro to define the custom type casters, *swigbind11*
+also provides some low-level functions to perform type conversions:
+
+Conversion from Python object to underlying C++ object:
+```cpp
+template<typename T>
+std::shared_ptr<T> swig_py_cast(pybind11::handle obj, std::string_view python_type_name)
+```
+
+Wrapping an existing C++ object using the externally defined SWIG bindings in a Python object:
+```cpp
+template<typename T>
+pybind11::handle py_swig_cast(std::shared_ptr<T> obj, std::string_view python_type_name)
+```
+```cpp
+template<typename T>
+pybind11::handle py_swig_cast(std::unique_ptr<T> obj, std::string_view python_type_name)
+```
+
+In all cases the user has to provide the correct mapping between the C++ type
+and the corresponding Python type generated by *SWIG*. If these two types do not
+match up, there is no way for *swigbind11* to detect this, and one will (as a
+best case scenario) encounter segmentation faults and similar errors.
 
 ## Example: FS Plugin
 
