@@ -1,6 +1,6 @@
 import sys
 
-from FSDataManager import FSMesh, FSMeshEnums
+from FSDataManager import FSFloatArray, FSMesh, FSMeshEnums
 
 import fsplugin
 
@@ -20,6 +20,14 @@ class TestFoo():
         assert mesh_copy.ThisPtr() != mesh.ThisPtr()
         assert mesh_copy.GetNCells(FSMeshEnums.CT_Hexa8) == \
             mesh.GetNCells(FSMeshEnums.CT_Hexa8)
+
+    def test_get_coordinates(clac, mesh):
+        foo = fsplugin.Foo(mesh)
+
+        data = foo.get_coordinates()
+        assert isinstance(data, FSFloatArray)
+        assert data.Size(0) == mesh.GetNOwnedCells(FSMeshEnums.CT_Node)
+        assert data.Size(1) == 3
 
     def test_info(clac, mesh):
         fsplugin.Foo(mesh).info()
