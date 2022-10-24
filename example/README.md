@@ -30,7 +30,7 @@ type `python_type` taking into account the correct holder type,
 
 - `SWIGBIND11_TYPE_CASTER(cpp_type, python_type)`
 - special case, e.g., `FSArray<>`:
-  `SWIGBIND11_TYPE_CASTER_TWO_SIDED(cpp_type, to_swig, from_swig) `
+  `SWIGBIND11_TYPE_CASTER_TWO_SIDED(cpp_type, to_swig, from_swig)`
 
 Here, `FSArray<>` (and potentially other types) require special handling as the
 SWIG layer introduces an intermediate type, resulting in distinct but
