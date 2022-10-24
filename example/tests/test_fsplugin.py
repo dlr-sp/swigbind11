@@ -29,6 +29,12 @@ class TestFoo():
         assert data.Size(0) == mesh.GetNOwnedCells(FSMeshEnums.CT_Node)
         assert data.Size(1) == 3
 
+    def test_set_coordinates(clac, mesh):
+        foo = fsplugin.Foo(mesh)
+
+        data = foo.get_coordinates()
+        foo.set_coordinates(data)
+
     def test_info(clac, mesh):
         fsplugin.Foo(mesh).info()
 
