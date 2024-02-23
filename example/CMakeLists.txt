@@ -15,7 +15,7 @@ set(SWIGBIND11_ROOT "../")
 
 # for pybind11, either the version included in swigbind11 can be used or a
 # project-specific one, e.g., '${PROJECT_SOURCE_DIR}/third_party/pybind11'
-set(PYBIND11_ROOT "../third_party/pybind11")
+set(PYBIND11_ROOT "third_party/pybind11")
 
 # prefer first detected Python version to avoid issues with virtual environments
 set(Python_FIND_STRATEGY LOCATION)

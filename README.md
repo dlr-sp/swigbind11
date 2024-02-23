@@ -168,6 +168,9 @@ bindings. But, as we shall see in the next section, there is a solution!
 
 ## Using *swigbind11*
 
+Note: It is the responsibility of the user to add the *pybind11* headers to the header-search path of his build-system.
+*swigbind11* is not shipped with a *pybind11* clone for this purpose!  
+
 Interfacing of libraries wrapped via *SWIG* and *pybind11* is quite easy using
 *swigbind11*. It allows the automatic conversion between *SWIG*-wrapped objects
 and the corresponding C++ types by means of using a custom *pybind11* *type
@@ -230,6 +233,7 @@ best case scenario) encounter segmentation faults and similar errors.
 ## Example: FS Plugin
 
 A demonstration of the usage of *swigbind11* for a real-world example (plugin
-for the *Flow Simulator*) is contained in the [example directory](example/).
+for the *Flow Simulator*) can be found in the [example directory](example/). To make the example more self-contained,
+*pybind11* in included as a third-party library. 
 
 [^1]: https://github.com/tensorflow/community/blob/master/rfcs/20190208-pybind11.md
