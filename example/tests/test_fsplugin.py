@@ -1,61 +1,43 @@
 import sys
-
-from FSDataManager import FSFloatArray, FSMesh, FSMeshEnums
-
-import fsplugin
-
+from example_mesh_library import Mesh
+import meshplugin
 
 class TestFoo():
-    def test_init(clac, mesh):
-        foo = fsplugin.Foo(mesh)
+    def test_init(self, mesh):
+        foo = meshplugin.Foo(mesh)
         assert foo
 
-    def test_clone(clac, mesh):
-        foo = fsplugin.Foo(mesh)
+    def test_clone(self, mesh):
+        foo = meshplugin.Foo(mesh)
 
         mesh_copy = foo.clone()
 
-        assert isinstance(mesh_copy, type(mesh))
-        assert mesh_copy.IsInitialized()
-        assert mesh_copy.ThisPtr() != mesh.ThisPtr()
-        assert mesh_copy.GetNCells(FSMeshEnums.CT_Hexa8) == \
-            mesh.GetNCells(FSMeshEnums.CT_Hexa8)
+        correct_type = isinstance(mesh_copy, type(mesh))
+        equal_number_of_nodes = mesh_copy.numNodes() == mesh.numNodes()
+        assert correct_type and equal_number_of_nodes
 
-    def test_get_coordinates(clac, mesh):
-        foo = fsplugin.Foo(mesh)
-
-        data = foo.get_coordinates()
-        assert isinstance(data, FSFloatArray)
-        assert data.Size(0) == mesh.GetNOwnedCells(FSMeshEnums.CT_Node)
-        assert data.Size(1) == 3
-
-    def test_set_coordinates(clac, mesh):
-        foo = fsplugin.Foo(mesh)
-
-        data = foo.get_coordinates()
-        foo.set_coordinates(data)
-
-    def test_info(clac, mesh):
-        fsplugin.Foo(mesh).info()
+    def test_info(self, mesh):
+        meshplugin.Foo(mesh).info()
 
 
-def test_create_mesh(clac):
-    mesh = fsplugin.create_mesh(clac)
-    assert mesh
-    assert isinstance(mesh, FSMesh)
+def test_create_mesh():
+    mesh = meshplugin.create_mesh()
+    assert isinstance(mesh, Mesh)
 
 
 def test_ref_count_foo(mesh):
     mesh_ref_cnt = sys.getrefcount(mesh)
 
-    foo = fsplugin.Foo(mesh)
-    assert sys.getrefcount(mesh) == mesh_ref_cnt + 1
+    foo = meshplugin.Foo(mesh)
+    correct_ref_count_before = sys.getrefcount(mesh) == mesh_ref_cnt + 1
 
     del foo
-    assert sys.getrefcount(mesh) == mesh_ref_cnt
+    correct_ref_count_after =  sys.getrefcount(mesh) == mesh_ref_cnt
+
+    assert correct_ref_count_after and correct_ref_count_before
 
 
-def test_ref_count_create_mesh(clac):
-    mesh = fsplugin.create_mesh(clac)
+def test_ref_count_create_mesh():
+    mesh = meshplugin.create_mesh()
     mesh_ref_cnt = sys.getrefcount(mesh)
     assert mesh_ref_cnt == 2

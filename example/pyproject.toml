@@ -1,9 +1,32 @@
 [build-system]
-requires = [
-  "setuptools>=42",
-  "wheel",
-  "scikit-build",
-  "cmake>=3.18",
-  "ninja; platform_system!='Windows'",
+requires = ["scikit-build-core", "swig"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "meshplugin"
+version = "0.1.0"
+authors = [
+  { name = "Ramandeep Jain", email = "ramandeep.jain@dlr.de" },
+  { name = "Severin Strobl"},
 ]
-build-backend = "setuptools.build_meta"
+description = "Sample project demonstrating usage of swigbind11 for an prototypical swig project"
+readme = "README.md"
+requires-python = ">=3.7"
+keywords = []
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Build Tools",
+  "Topic :: Software Development :: Libraries",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9"
+]
+
+dependencies = [
+    "pytest",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

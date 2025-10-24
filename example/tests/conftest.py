@@ -1,22 +1,17 @@
-import pathlib
 import pytest
-import os
 
-from FSDataManager import FSClac, FSMesh
-
+from example_mesh_library import Mesh
 
 @pytest.fixture()
-def clac():
-    return FSClac()
+def mesh():
+    """Generates a small mesh with four nodes and one element."""
+    mesh = Mesh()
 
+    mesh.addNode(0, 0, 0)
+    mesh.addNode(1, 0, 0)
+    mesh.addNode(0, 1, 0)
+    mesh.addNode(0, 0, 1)
 
-@pytest.fixture()
-def mesh(clac):
-    mesh = FSMesh(clac)
-
-    mesh_file = pathlib.Path(os.path.realpath(__file__)).parent / \
-        'data' / 'hexcube_10x10x10.h5'
-
-    assert mesh.ImportMeshHDF5(Filename=mesh_file)
+    mesh.addElement(0, 1, 2, 3)
 
     return mesh
