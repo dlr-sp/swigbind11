@@ -31,7 +31,7 @@ type `python_type` taking into account the correct holder type,
 - C++ compiler supporting C++17 (tested with GNU 11.4.0)
 - CMake >= 3.18
 - Python >= 3.7
-- SWIG >= 4.0
+- SWIG >= 4.0 and SWIG <= 4.3.1
 - pytest
 
 ## Installation
