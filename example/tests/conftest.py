@@ -1,3 +1,5 @@
+"""Fixture for the unit test"""
+
 import pytest
 
 from example_mesh_library import Mesh
