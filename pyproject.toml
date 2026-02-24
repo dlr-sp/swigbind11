@@ -1,0 +1,32 @@
+[build-system]
+requires = ["scikit-build-core"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "swigbind11"
+version = "1.0.0"
+authors = [
+  { name = "Ramandeep Jain", email = "ramandeep.jain@dlr.de" },
+  { name = "Severin Strobl"},
+]
+description = "Coupling of pybind11 object and swig object."
+readme = "README.md"
+requires-python = ">=3.7"
+keywords = []
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Build Tools",
+  "Topic :: Software Development :: Libraries",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9"
+]
+
+[project.scripts]
+swigbind11-config = "swigbind11.__main__:main"
+
+[tool.scikit-build.cmake.define]
+# This will override whatever pip tries to set
+CMAKE_INSTALL_PREFIX = { env = "VIRTUAL_ENV" }
