@@ -27,6 +27,3 @@ classifiers = [
 [project.scripts]
 swigbind11-config = "swigbind11.__main__:main"
 
-[tool.scikit-build.cmake.define]
-# This will override whatever pip tries to set
-CMAKE_INSTALL_PREFIX = { env = "VIRTUAL_ENV" }
