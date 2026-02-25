@@ -5,11 +5,23 @@ project(swigbind11)
 enable_language(CXX)
 include(GNUInstallDirs)
 
-# # --- Python Discovery ---
-# find_package(Python3 COMPONENTS Interpreter Development.Module REQUIRED)
+# Generate swigpyrun.h while installing swigbind11
+find_package(SWIG REQUIRED)
+include(${SWIG_USE_FILE})
 
-# # --- Define Internal Package Paths ---
-# set(swigbind11_PY_PACKAGE_DIR "swigbind11")
+set(BINARY_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/include")
+set(SWIGPYRUN_OUTPUT "${BINARY_INCLUDE_DIR}/swigpyrun.h")
+
+file(MAKE_DIRECTORY ${BINARY_INCLUDE_DIR})
+
+add_custom_command(
+    OUTPUT ${SWIGPYRUN_OUTPUT}
+    COMMAND ${SWIG_EXECUTABLE} -python -external-runtime ${SWIGPYRUN_OUTPUT}
+    COMMENT "Generating swigpyrun.h"
+    VERBATIM
+)
+
+add_custom_target(generate_swigpyrun ALL DEPENDS ${SWIGPYRUN_OUTPUT})
 
 # # Use relative paths for DESTINATION to ensure the package is relocatable.
 set(swigbind11_REL_ROOT "swigbind11")
@@ -22,6 +34,7 @@ add_library(swigbind11::headers ALIAS swigbind11)
 target_include_directories(
   swigbind11 INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
     $<INSTALL_INTERFACE:${swigbind11_REL_ROOT}/include>
 )
 
@@ -43,6 +56,8 @@ install(DIRECTORY "swigbind11/"
 # 2. Install C++ Headers into swigbind11/include/
 install(DIRECTORY "include/swigbind11"
         DESTINATION "${swigbind11_REL_ROOT}/include")
+
+install(FILES ${SWIGPYRUN_OUTPUT} DESTINATION "${swigbind11_REL_ROOT}/include/swigbind11")
 
 # 3. Install CMake Config into swigbind11/share/cmake/
 set(swigbind11_REL_CMAKE_DEST "${swigbind11_REL_ROOT}/share/cmake")
