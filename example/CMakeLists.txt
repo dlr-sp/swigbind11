@@ -19,17 +19,39 @@ find_package(Python3 COMPONENTS Interpreter Development.Module REQUIRED)
 
 # for a real plugin, you would probably add 'swigbind11' as a Git submodule at
 # the appropriate location, e.g., '${PROJECT_SOURCE_DIR}/third_party/swigbind11'
-set(SWIGBIND11_ROOT "${PROJECT_SOURCE_DIR}/../")
+# set(SWIGBIND11_ROOT "${PROJECT_SOURCE_DIR}/../")
 
 # for pybind11, either the version included in swigbind11 can be used or a
 # project-specific one, e.g., '${PROJECT_SOURCE_DIR}/third_party/pybind11'
-set(PYBIND11_ROOT "${PROJECT_SOURCE_DIR}/third_party/pybind11")
+# set(PYBIND11_ROOT "${PROJECT_SOURCE_DIR}/third_party/pybind11")
 
 # pybind11 shipped as a third-party dependency
-add_subdirectory(${PYBIND11_ROOT} "third_party/pybind11" EXCLUDE_FROM_ALL)
+# add_subdirectory(${PYBIND11_ROOT} "third_party/pybind11" EXCLUDE_FROM_ALL)
+
+execute_process(
+    COMMAND ${Python3_EXECUTABLE} -m pybind11 --cmakedir
+    OUTPUT_VARIABLE pybind11_DIR
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+message(${pybind11_DIR})
+
+find_package(pybind11 REQUIRED)
+
+execute_process(
+    COMMAND ${Python3_EXECUTABLE} -m swigbind11 --cmakedir
+    OUTPUT_VARIABLE swigbind11_DIR
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+set(swigbind11_DIR ${swigbind11_DIR})
+message(${swigbind11_DIR})
+
+find_package(swigbind11 REQUIRED)
+
 
 # # swigbind11 shipped as a third-party dependency
-add_subdirectory(${SWIGBIND11_ROOT} "third_party/swigbind11" EXCLUDE_FROM_ALL)
+# add_subdirectory(${SWIGBIND11_ROOT} "third_party/swigbind11" EXCLUDE_FROM_ALL)
 
 # subdirectories for the swig-wrapped mesh and pybind11-wrapped mesh plugin
 add_subdirectory(src/example_mesh_library)
