@@ -1,9 +1,10 @@
 # See the file "LICENSE" for the full license governing this code.
 cmake_minimum_required(VERSION 3.18)
-project(swigbind11)
+project(swigbind11 VERSION 1.1.0 LANGUAGES CXX)
 
 enable_language(CXX)
 include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
 
 # Generate swigpyrun.h while installing swigbind11
 find_package(SWIG REQUIRED)
@@ -40,11 +41,14 @@ target_include_directories(
 
 target_compile_features(swigbind11 INTERFACE cxx_std_17)
 
+set(swigbind11_INCLUDE_DIR "\$\{PACKAGE_PREFIX_DIR\}/swigbind11/include")
+set(swigbind11_REL_CMAKE_DEST "${swigbind11_REL_ROOT}/share/cmake")
+
 # --- Configuration Files ---
-configure_file(
+configure_package_config_file(
     "tools/${PROJECT_NAME}Config.cmake.in"
     "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-    @ONLY
+    INSTALL_DESTINATION "${swigbind11_REL_CMAKE_DEST}"
 )
 
 # --- Installation Logic ---
@@ -60,8 +64,6 @@ install(DIRECTORY "include/swigbind11"
 install(FILES ${SWIGPYRUN_OUTPUT} DESTINATION "${swigbind11_REL_ROOT}/include/swigbind11")
 
 # 3. Install CMake Config into swigbind11/share/cmake/
-set(swigbind11_REL_CMAKE_DEST "${swigbind11_REL_ROOT}/share/cmake")
-
 install(TARGETS swigbind11 EXPORT swigbind11Targets)
 
 install(EXPORT swigbind11Targets

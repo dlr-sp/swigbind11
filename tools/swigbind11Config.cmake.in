@@ -1,6 +1,7 @@
 @PACKAGE_INIT@
 
-set(swigbind11_INCLUDE_DIR "@swigbind11_INSTALL_DIR@")
+set(swigbind11_INCLUDE_DIR "@swigbind11_INCLUDE_DIR@")
+set(swigbind11_VERSION "@swigbind11_VERSION@")
 
 include("${CMAKE_CURRENT_LIST_DIR}/swigbind11Targets.cmake")
 
@@ -15,5 +16,5 @@ endif()
 set(swigbind11_FOUND TRUE)
 
 if(NOT swigbind11_FIND_QUIETLY)
-    message(STATUS "Found swigbind11: ${swigbind11_INCLUDE_DIRS} (version ${swigbind11_VERSION})")
+    message(STATUS "Found swigbind11: ${swigbind11_INCLUDE_DIR} (found version ${swigbind11_VERSION})")
 endif()
