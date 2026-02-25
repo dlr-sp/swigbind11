@@ -17,7 +17,7 @@ def get_cmake_dir() -> str:
     """
     Locate the swigbind11 CMake module configuration directory.
 
-    This function searches for the 'share/cmake/swigbind11' directory relative
+    This function searches for the 'share/cmake/' directory relative
     to the package installation path. This directory typically contains
     'swigbind11Config.cmake' used by external projects.
 
@@ -29,7 +29,7 @@ def get_cmake_dir() -> str:
             indicating that the package was not installed correctly or
             is being run from a source tree without a build.
     """
-    cmake_installed_path = os.path.join(DIR, "share", "cmake", "swigbind11")
+    cmake_installed_path = os.path.join(DIR, "share", "cmake")
     if os.path.exists(cmake_installed_path):
         return cmake_installed_path
 
