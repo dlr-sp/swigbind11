@@ -6,8 +6,7 @@ build-backend = "scikit_build_core.build"
 name = "swigbind11"
 version = "1.1.0"
 authors = [
-  { name = "Ramandeep Jain", email = "ramandeep.jain@dlr.de" },
-  { name = "Severin Strobl"},
+  { name = "Ramandeep Jain, Severin Strobl", email = "ramandeep.jain@dlr.de" },
 ]
 description = "Coupling of pybind11 object and swig object."
 readme = "README.md"
@@ -27,3 +26,6 @@ classifiers = [
 [project.scripts]
 swigbind11-config = "swigbind11.__main__:main"
 
+[tool.scikit-build]
+wheel.packages = ["swigbind11"]
+wheel.platlib = false       # This makes it a none-any wheel

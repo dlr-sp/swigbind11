@@ -5,7 +5,7 @@
   - [Basics of *pybind11*](#basics-of-pybind11)
   - [Combining libraries using *SWIG* and *pybind11*](#combining-libraries-using-swig-and-pybind11)
 - [Using *swigbind11*](#using-swigbind11)
-- [Example: FS Plugin](#example-fs-plugin)
+- [Example: Mesh Plugin](#example-mesh-plugin)
 
 ## Overview
 
