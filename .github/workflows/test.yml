@@ -33,7 +33,17 @@ jobs:
       - name: Build Wheel
         run: python -m build
 
-      - name: Install and Test
+      - name: Install swigbind11 project
         run: |
           # Install the generated wheel to test the actual build artifact
           python -m pip install dist/*.whl
+
+      - name: Build and install
+        run: |
+          cd example
+          pip install . -v
+
+      - name: Run Pytest
+        run: |
+          cd example
+          pytest
