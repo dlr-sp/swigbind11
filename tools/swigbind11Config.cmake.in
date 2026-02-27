@@ -16,5 +16,5 @@ endif()
 set(swigbind11_FOUND TRUE)
 
 if(NOT swigbind11_FIND_QUIETLY)
-    message(STATUS "Found swigbind11: ${swigbind11_INCLUDE_DIR} (found version ${swigbind11_VERSION})")
+    message(STATUS "Found swigbind11: ${swigbind11_INCLUDE_DIR} (found version \"${swigbind11_VERSION}\")")
 endif()
