@@ -1,6 +1,6 @@
 # See the file "LICENSE" for the full license governing this code.
 cmake_minimum_required(VERSION 3.18)
-project(swigbind11 VERSION 1.1.0 LANGUAGES CXX)
+project(${SKBUILD_PROJECT_NAME} VERSION ${SKBUILD_PROJECT_VERSION} LANGUAGES CXX)
 
 enable_language(CXX)
 include(GNUInstallDirs)
