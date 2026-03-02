@@ -1,0 +1,20 @@
+@PACKAGE_INIT@
+
+set(swigbind11_INCLUDE_DIR "@swigbind11_INCLUDE_DIR@")
+set(swigbind11_VERSION "@swigbind11_VERSION@")
+
+include("${CMAKE_CURRENT_LIST_DIR}/swigbind11Targets.cmake")
+
+if(NOT TARGET swigbind11::headers)
+    add_library(swigbind11::headers INTERFACE IMPORTED)
+    set_target_properties(swigbind11::headers PROPERTIES
+        INTERFACE_LINK_LIBRARIES "swigbind11::swigbind11"
+        INTERFACE_INCLUDE_DIRECTORIES "${swigbind11_INCLUDE_DIR}"
+    )
+endif()
+
+set(swigbind11_FOUND TRUE)
+
+if(NOT swigbind11_FIND_QUIETLY)
+    message(STATUS "Found swigbind11: ${swigbind11_INCLUDE_DIR} (found version \"${swigbind11_VERSION}\")")
+endif()

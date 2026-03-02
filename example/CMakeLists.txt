@@ -17,19 +17,21 @@ set(Python_FIND_STRATEGY LOCATION)
 
 find_package(Python3 COMPONENTS Interpreter Development.Module REQUIRED)
 
-# for a real plugin, you would probably add 'swigbind11' as a Git submodule at
-# the appropriate location, e.g., '${PROJECT_SOURCE_DIR}/third_party/swigbind11'
-set(SWIGBIND11_ROOT "${PROJECT_SOURCE_DIR}/../")
+execute_process(
+    COMMAND ${Python3_EXECUTABLE} -m pybind11 --cmakedir
+    OUTPUT_VARIABLE pybind11_DIR
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
 
-# for pybind11, either the version included in swigbind11 can be used or a
-# project-specific one, e.g., '${PROJECT_SOURCE_DIR}/third_party/pybind11'
-set(PYBIND11_ROOT "${PROJECT_SOURCE_DIR}/third_party/pybind11")
+find_package(pybind11 REQUIRED)
 
-# pybind11 shipped as a third-party dependency
-add_subdirectory(${PYBIND11_ROOT} "third_party/pybind11" EXCLUDE_FROM_ALL)
+execute_process(
+    COMMAND ${Python3_EXECUTABLE} -m swigbind11 --cmakedir
+    OUTPUT_VARIABLE swigbind11_DIR
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
 
-# # swigbind11 shipped as a third-party dependency
-add_subdirectory(${SWIGBIND11_ROOT} "third_party/swigbind11" EXCLUDE_FROM_ALL)
+find_package(swigbind11 REQUIRED)
 
 # subdirectories for the swig-wrapped mesh and pybind11-wrapped mesh plugin
 add_subdirectory(src/example_mesh_library)
