@@ -1,7 +1,7 @@
 [build-system]
 requires = [
   "scikit-build-core",
-  "swig<4.4.0",
+  "swig",
   "pybind11",
   ]
 # Use a custom in-tree backend to inject local dependencies.
