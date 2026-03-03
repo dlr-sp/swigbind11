@@ -41,7 +41,7 @@ inline auto extract_swig_object(py::handle obj, std::string_view type_name) {
   // type_str = <class 'SwigPyObject'>                        (SWIG <  4.4.0)
   // type_str = <class 'swig_runtime_data5.SwigPyObject'>     (SWIG >= 4.4.0)
   if (type_str.find("SwigPyObject") == std::string::npos) {
-    throw py::cast_error{"expected SWIG-wrapped object, got: " + type};
+    throw py::cast_error{"expected SWIG-wrapped object, got: " + type_str};
   }
 
   return swig_obj;
