@@ -221,6 +221,13 @@ cmake --install build
 Note: It is the responsibility of the user to add the *pybind11* headers to the header-search path of his build-system (see [Link](https://pybind11.readthedocs.io/en/stable/installing.html)).
 *swigbind11* is not shipped with a *pybind11* clone for this purpose!
 
+``swigbind11`` **Version Mapping**
+Due to breaking changes in SWIG's internal logic, please ensure you use the version of ``swigbind11`` that matches your installed SWIG version:
+
+- SWIG < 4.4.0: Use swigbind11 v1.1.0
+- SWIG ≥ 4.4.0: Use swigbind11 v1.2.0
+
+
 Interfacing of libraries wrapped via *SWIG* and *pybind11* is quite easy using
 *swigbind11*. It allows the automatic conversion between *SWIG*-wrapped objects
 and the corresponding C++ types by means of using a custom *pybind11* *type

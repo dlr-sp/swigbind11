@@ -31,8 +31,16 @@ type `python_type` taking into account the correct holder type,
 - C++ compiler supporting C++17 (tested with GNU 11.4.0)
 - CMake >= 3.18
 - Python >= 3.7
-- SWIG >= 4.0 and SWIG <= 4.3.1
+- SWIG >= 4.0
 - pytest
+- swigbind11 **conditional**
+
+``swigbind11`` **Version Mapping**
+
+Due to breaking changes in SWIG's internal logic, please ensure you use the version of ``swigbind11`` that matches your installed SWIG version:
+
+- SWIG < 4.4.0: Use swigbind11 v1.1.0
+- SWIG ≥ 4.4.0: Use swigbind11 v1.2.0
 
 ## Installation
 
