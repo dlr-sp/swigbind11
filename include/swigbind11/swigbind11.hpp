@@ -28,7 +28,7 @@ inline auto split_python_type_name(std::string_view type_name) -> std::tuple<std
 inline auto extract_swig_object(py::handle obj, std::string_view type_name) {
   auto [module_name, class_name] = split_python_type_name(type_name);
   const auto python_type = py::module_::import(module_name.c_str()).attr(class_name.c_str());
-  if (!obj.get_type().is(python_type)) {
+  if (!py::type::of(obj).is(python_type)) {
     throw py::cast_error{"got an unexpected type: " + py::str(py::type::of(obj)).cast<std::string>() + " instead of " +
                          py::str(python_type).cast<std::string>()};
   }
@@ -110,7 +110,7 @@ auto py_swig_cast(std::shared_ptr<T> src, std::string_view python_type_name) -> 
   /* NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast) */
   obj.attr("_swigbind11_shared_ptr") = reinterpret_cast<std::ptrdiff_t>(swigbind11_shared_ptr);
   /* monkeypatch the SWIG type with a custom deleter */
-  py::handle swig_type = obj.get_type();
+  py::handle swig_type = py::type::of(obj);
   if (!py::hasattr(swig_type, "__del__")) {
     swig_type.attr("__del__") = py::cpp_function(
         [](py::object self /* NOLINT(performance-unnecessary-value-param) */) {
