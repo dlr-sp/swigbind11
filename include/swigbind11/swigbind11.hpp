@@ -138,6 +138,10 @@ auto py_swig_cast(std::shared_ptr<T> src, std::string_view python_type_name) -> 
    public:                                                                                                            \
     PYBIND11_TYPE_CASTER(std::shared_ptr<cpp_type>, const_name(python_type));                                         \
     bool load(handle src, bool /*implicit*/) {                                                                        \
+      if (src.is_none()) {                                                                                            \
+        value = nullptr;                                                                                              \
+        return true;                                                                                                  \
+      }                                                                                                               \
       try {                                                                                                           \
         value = swigbind11::swig_py_cast<cpp_type>(src, python_type);                                                 \
       } catch (std::runtime_error & /*err*/) {                                                                        \
@@ -146,7 +150,10 @@ auto py_swig_cast(std::shared_ptr<T> src, std::string_view python_type_name) -> 
       return true;                                                                                                    \
     }                                                                                                                 \
     static handle cast(const std::shared_ptr<cpp_type>& src, return_value_policy /* policy */, handle /* parent */) { \
-      return swigbind11::py_swig_cast(src, python_type);                                                              \
+      if (src) {                                                                                                      \
+        return swigbind11::py_swig_cast(src, python_type);                                                            \
+      }                                                                                                               \
+      return none().release();                                                                                        \
     }                                                                                                                 \
   };                                                                                                                  \
   }  // namespace pybind11::detail
@@ -160,6 +167,10 @@ auto py_swig_cast(std::shared_ptr<T> src, std::string_view python_type_name) -> 
                                                                                                                       \
    public:                                                                                                            \
     bool load(handle src, bool /*implicit*/) {                                                                        \
+      if (src.is_none()) {                                                                                            \
+        value = nullptr;                                                                                              \
+        return true;                                                                                                  \
+      }                                                                                                               \
       try {                                                                                                           \
         value = swigbind11::swig_py_cast<cpp_type>(src, from_swig);                                                   \
       } catch (std::runtime_error & /*err*/) {                                                                        \
@@ -169,7 +180,10 @@ auto py_swig_cast(std::shared_ptr<T> src, std::string_view python_type_name) -> 
     }                                                                                                                 \
                                                                                                                       \
     static handle cast(const std::shared_ptr<cpp_type>& src, return_value_policy /* policy */, handle /* parent */) { \
-      return swigbind11::py_swig_cast(src, to_swig);                                                                  \
+      if (src) {                                                                                                      \
+        return swigbind11::py_swig_cast(src, to_swig);                                                                \
+      }                                                                                                               \
+      return none().release();                                                                                        \
     }                                                                                                                 \
   };                                                                                                                  \
   }  // namespace pybind11::detail
